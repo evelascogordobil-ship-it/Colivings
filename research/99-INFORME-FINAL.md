@@ -125,3 +125,75 @@ EcoIsleta, Casa Alsatia).
 
 **Recomendación de seguimiento: A Coruña.** Su paseo marítimo urbano continuo de ~13 km es
 el que mejor encaja con el requisito de caminatas largas de toda Europa, y no se investigó.
+
+---
+
+## 7. SEGUNDA PASADA DE VERIFICACIÓN (tras el diagnóstico de red)
+
+### Diagnóstico del bloqueo de red — cerrado
+El proxy local está **sano** (`recentRelayFailures: []`, CA bundle correcto, `bundleCoversEveryHost: true`).
+El fallo es `CONNECT tunnel failed, response 403` contra **todo dominio externo probado**:
+somoscoliving.com, vivariumcoliving.com, wikipedia.org, google.com, booking.com,
+openstreetmap.org, nominatim, router.project-osrm.org, coliving.com, elespanol.com.
+WebFetch devuelve `EGRESS_BLOCKED` para los mismos.
+
+**Causa: política de egress del entorno**, no un fallo técnico. El README del proxy
+(`/root/.ccr/README.md`, sección "403 / 407") indica que un 403 significa host no permitido
+por la política de la organización y que **no debe reintentarse ni rodearse**.
+
+**Remedio (requiere acción del usuario):** editar la política de red del entorno de Claude
+Code on the web, o crear un entorno nuevo con red abierta / allowlist que incluya dominios
+de colivings, Booking, Google Maps y Reddit. Doc: https://code.claude.com/docs/en/claude-code-on-the-web
+
+**Canal que sí funciona:** WebSearch (se ejecuta en servidor, no pasa por este egress).
+
+### Hallazgos nuevos obtenidos por WebSearch
+
+**Vivarium Valencia — estructura confirmada y comunidad ahora SÍ evidenciada**
+- Confirmado: **3 plantas × 8 habitaciones, cada una con baño privado = 24/24**.
+  Cada planta tiene **su propio salón, cocina equipada, terrazas y lavandería**.
+  (Matiz relevante: la vida común está fragmentada en clusters de 8, no en un único
+  espacio de 24 — puede ser más acogedor o menos "masa crítica", según se mire.)
+- **Evidencia de comunidad real, multi-año**: community managers citados por nombre
+  (Pablo, Alba, Dome, Erica, Noya) descritos como "cultivando comunidad activamente,
+  no solo gestionando logística"; **cenas familiares, intercambio de habilidades,
+  noches de cine**, con **martes y jueves como días fijos de actividad**.
+- **Quejas reales encontradas**: habitaciones "bastante básicas", **baños ensuite
+  estrechos**, almacenamiento limitado a un armario, poca decoración; una reseña de hace
+  3 años señala **ausencia de aire acondicionado**; habitaciones a calle **ruidosas de noche**
+  (dos reseñas, calificado de leve).
+- **Mitigación costera encontrada**: a **5 min andando** están los **9 km continuos de los
+  jardines del Turia**, que desembocan en la Ciudad de las Artes y el puerto. No es costa,
+  pero sí resuelve el requisito de "caminata larga desde la puerta".
+  Playa de El Cabanyal: **15 min en bici**.
+
+**SOMOS Palma — comunidad evidenciada, pero más débil**
+- Reseñas positivas: "SOMOS organiza muy bien eventos y mantiene informados a los
+  residentes de lo que pasa en Palma y la isla"; convivencia "amable y respetuosa";
+  espacios "diseñados y decorados con belleza".
+- **No se encontró ninguna reseña negativa ni crítica** — lo que es un dato en sí mismo:
+  puede indicar poco volumen de reseñas indexadas, no ausencia de problemas.
+
+**Costa norte de España — hueco cerrado en negativo**
+A Coruña, Gijón, Santander y San Sebastián **no tienen coliving de 20+ habitaciones**.
+El stock español se concentra en Barcelona (97 espacios), Madrid (63) y Valencia (23);
+la cornisa cantábrica apenas aparece en las plataformas. Anceu Coliving (Galicia) es interior.
+
+### Efecto sobre la puntuación
+
+| Criterio | SOMOS Palma | Vivarium Valencia |
+|---|---|---|
+| Comunidad (25) | 19 *(evidencia positiva pero fina)* | **21** *(programación verificada multi-año)* |
+| Habitación (20) | **17** | 16 *(ensuite estrechos, básicos, sin A/C)* |
+| Costa (20) | **12** | 9 *(+1 por los 9 km del Turia a 5 min)* |
+| Vida independiente (15) | 14 | **15** |
+| Precio (10) | 8 | **10** |
+| Edificio (5) | **5** *(piscina + jardín)* | 4 |
+| Disponibilidad (5) | 4 | 4 |
+| Subtotal | **79** | **79** |
+| Penalización | — | −10 (mar no alcanzable andando) |
+| **TOTAL** | **79** | **69** |
+
+**El ganador no cambia: SOMOS Palma.** Pero con un matiz honesto que antes no podía hacer:
+**la comunidad mejor documentada de las dos es la de Vivarium**, no la de SOMOS. SOMOS gana
+por costa, piscina/jardín y calidad de habitación, no por comunidad demostrada.
